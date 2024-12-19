@@ -10,6 +10,13 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   )
+
+  app.enableCors({
+    origin: '*', // Permite cualquier origen. Cambia '*' por una URL específica para mayor seguridad.
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Permite el envío de cookies en las solicitudes
+  });
+
   await app.listen(3000);
 }
 bootstrap();

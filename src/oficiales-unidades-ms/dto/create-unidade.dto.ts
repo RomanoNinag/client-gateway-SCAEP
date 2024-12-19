@@ -1,4 +1,5 @@
-import { IsNumber, IsPositive, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsPositive, IsString } from "class-validator";
+import { Departamento } from "../enums/departamento.enum";
 
 export class CreateUnidadDto {
 
@@ -14,7 +15,8 @@ export class CreateUnidadDto {
     @IsString()
     responsable: string;
 
-    @IsNumber()
-    @IsPositive()
-    id_departamento: number;
+    @IsEnum(Departamento, {
+        message: `El departamento debe ser uno de los siguientes valores: ${Object.values(Departamento).join(',')}`
+    })
+    departamento: String;
 }
