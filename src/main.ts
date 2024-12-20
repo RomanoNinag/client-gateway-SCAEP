@@ -1,8 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
+
+  const logger = new Logger('Client Gateway');
+
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
@@ -17,10 +20,10 @@ async function bootstrap() {
     credentials: true, // Permite el envío de cookies en las solicitudes
   });
 
-  console.log('Client Gateway running on http://localhost:3000');
-  console.log('Client Gateway running final final prove');
+  // console.log('Client Gateway running on http://localhost:3000');
+  // console.log('Client Gateway running final final prove');
 
-
+  logger.log('Client Gateway running 99999999999999999999');
 
   await app.listen(3000);
 }
