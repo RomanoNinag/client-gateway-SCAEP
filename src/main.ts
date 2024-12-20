@@ -18,6 +18,8 @@ async function bootstrap() {
   });
 
   console.log('Client Gateway running on http://localhost:3000');
+  console.log('Client Gateway running final final prove');
+
 
 
   await app.listen(3000);
