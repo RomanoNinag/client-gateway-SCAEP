@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build Docker image with timestamp tag
+      run: |
+        TIMESTAMP=$(date +%s)
+        docker build . --file dockerfile.dev --tag ghcr.io/romanoninag/scaep-client-gateway:$TIMESTAMP
+
+    - name: Push Docker image
+      run: |
+        TIMESTAMP=$(date +%s)
+        docker push ghcr.io/romanoninag/scaep-client-gateway:$TIMESTAMP
