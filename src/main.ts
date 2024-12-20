@@ -17,6 +17,9 @@ async function bootstrap() {
     credentials: true, // Permite el envío de cookies en las solicitudes
   });
 
+  console.log('Client Gateway running on http://localhost:3000');
+
+
   await app.listen(3000);
 }
 bootstrap();
