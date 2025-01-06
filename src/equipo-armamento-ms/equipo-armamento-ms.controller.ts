@@ -12,6 +12,19 @@ export class EquipoArmamentoMsController {
     @Inject(RABBITMQ_SERVICE) private readonly client: ClientProxy,
   ) { }
 
+  // SEED
+  @Get("seed")
+  async seed() {
+    try {
+      const seed = await firstValueFrom(
+        this.client.send('seed.articulo', {})
+      )
+      return seed;
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
   // ARMAS
   @Post("arma")
   async createArma(@Body() createArma: CreateArmaDto) {
