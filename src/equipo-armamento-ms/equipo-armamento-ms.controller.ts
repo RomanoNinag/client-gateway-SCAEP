@@ -3,7 +3,8 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { RABBITMQ_SERVICE } from 'src/config';
-import { CreateArmaDto, UpdateArmaDto } from './dto';
+import { CreateArmaDto, CreateEquipoDto, UpdateArmaDto, UpdateEquipoDto } from './dto';
+
 
 @Controller('articulo')
 export class EquipoArmamentoMsController {
@@ -54,6 +55,31 @@ export class EquipoArmamentoMsController {
       throw new RpcException(error);
     }
   }
+  @Get("arma/referencia/marca")
+  async findAllArmasReferenciaMarca() {
+    try {
+      const armaref = await firstValueFrom(
+        this.client.send('get.articulo.arma.referencia.marca', {})
+      )
+      return armaref;
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+
+  @Get("arma/referencia/modelo")
+  async findAllArmasReferenciaModelo() {
+    try {
+      const armaref = await firstValueFrom(
+        this.client.send('get.articulo.arma.referencia.modelo', {})
+      )
+      return armaref;
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
   @Get("arma/:id")
   async findOneArma(@Param('id') id: string) {
     try {
@@ -88,7 +114,6 @@ export class EquipoArmamentoMsController {
       } else {
         throw new InternalServerErrorException('Error desconocido al actualizar el arma.');
       }
-      // throw new RpcException(error);
     }
   }
 
@@ -110,4 +135,123 @@ export class EquipoArmamentoMsController {
   }
 
   // EQUIPOS  
+  @Post("equipo")
+  async createEquipo(@Body() createEquipo: CreateEquipoDto) {
+    try {
+      const equipo = await firstValueFrom(
+        this.client.send('create.articulo.equipo', createEquipo)
+      )
+      return equipo;
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        throw new BadRequestException(error.message);
+      } else {
+        throw new RpcException('Error desconocido al crear equipo.');
+      }
+
+    }
+  }
+
+  @Get("equipo")
+  async findAllEquipos() {
+    try {
+      const equipos = await firstValueFrom(
+        this.client.send('get.articulo.equipo', {})
+      )
+      return equipos
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+
+  @Get("equipo/referencia")
+  async findAllEquiposReferencia() {
+    try {
+      const equiporef = await firstValueFrom(
+        this.client.send('get.articulo.equipo.referencia', {})
+      )
+      return equiporef;
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+  @Get("equipo/referencia/marca")
+  async findAllEquiposReferenciaMarca() {
+    try {
+      const equiporef = await firstValueFrom(
+        this.client.send('get.articulo.equipo.referencia.marca', {})
+      )
+      return equiporef;
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+  @Get("equipo/referencia/modelo")
+  async findAllEquiposReferenciaModelo() {
+    try {
+      const equiporef = await firstValueFrom(
+        this.client.send('get.articulo.equipo.referencia.modelo', {})
+      )
+      return equiporef;
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+  @Get("equipo/:id")
+  async findOneEquipo(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      const equipo = await firstValueFrom(
+        this.client.send('get.articulo.equipo.id', { id }) //TODO manejo de errores: si no ponemos objeto lo encuentra
+      )
+      return equipo;
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        throw new BadRequestException(error.message);
+      } else {
+        throw new InternalServerErrorException('Error desconocido al encontrar el equipo.');
+      }
+    }
+  }
+
+  @Patch("equipo/:id")
+  async updateEquipo(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateEquipo: UpdateEquipoDto
+  ) {
+    try {
+      const equipo = await firstValueFrom(
+        this.client.send('update.articulo.equipo', { id, ...updateEquipo })
+      )
+      return equipo;
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        throw new BadRequestException(error.message);
+      } else {
+        throw new InternalServerErrorException('equipo Error desconocido al actualizar el equipo.');
+      }
+    }
+  }
+  @Delete("equipo/:id")
+  async removeEquipo(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      const equipo = await firstValueFrom(
+        this.client.send('delete.articulo.equipo', { id }) //TODO manejo de error
+      )
+      return equipo;
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        throw new BadRequestException(error.message);
+      } else {
+        throw new InternalServerErrorException('Error desconocido al eliminar el equipo.');
+      }
+    }
+  }
 }
