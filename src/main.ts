@@ -23,7 +23,7 @@ async function bootstrap() {
   // console.log('Client Gateway running on http://localhost:3000');
   // console.log('Client Gateway running final final prove');
 
-  logger.log('Client Gateway running 99999999999999999999');
+  logger.log('client Gateway fixed is runing ');
 
   await app.listen(3000);
 }
