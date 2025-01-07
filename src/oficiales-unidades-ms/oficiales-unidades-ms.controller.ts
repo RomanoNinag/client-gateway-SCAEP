@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, HttpStatus, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, HttpStatus, BadRequestException, InternalServerErrorException, ParseUUIDPipe } from '@nestjs/common';
 import { RABBITMQ_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOficialeDto, CreateUnidadDto } from './dto';
 import { catchError, first, firstValueFrom } from 'rxjs';
 import { CreateFunTieneArmaDto } from './dto/create-fun-tiene-arma.dto';
+import { UpdateFunTieneArmaDto } from './dto/update-fun-tiene-arma.dto';
 
 @Controller('ofiuni')
 export class OficialesUnidadesMsController {
@@ -124,7 +125,7 @@ export class OficialesUnidadesMsController {
   async createFunTieneArma(@Body() createFunTieneArmaDto: CreateFunTieneArmaDto) {
     try {
       const funTieneArma = await firstValueFrom(
-        this.client.send('crear.funTieneArma', createFunTieneArmaDto),
+        this.client.send('crear.ofiuni.funTieneArma', createFunTieneArmaDto),
       )
       return funTieneArma;
 
@@ -140,4 +141,137 @@ export class OficialesUnidadesMsController {
     }
   }
 
+  @Get('funtienearma')
+  async findAllFunTieneArma() {
+    try {
+      const funTieneArma = await firstValueFrom(
+        this.client.send('get.ofiuni.funTieneArma', {}),
+      )
+      return funTieneArma;
+
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      } else {
+        // Si no es un status manejado, lanzamos un error interno 
+        throw new RpcException('Error desconocido al obtener la relación fun-tiene-arma.');
+      }
+    }
+  }
+  @Get('funtienearma/:id')
+  async findOneFunTieneArma(
+    @Param('id', ParseUUIDPipe) id: string
+  ) {
+    try {
+      const funTieneArma = await firstValueFrom(
+        this.client.send('get.ofiuni.funTieneArma.id', { id }),
+      )
+      return funTieneArma;
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      } else if (error.status === 404) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      }
+      else {
+        // Si no es un status manejado, lanzamos un error interno 
+        throw new RpcException('Error desconocido al obtener la relación fun-tiene-arma.');
+      }
+    }
+  }
+
+  @Patch('funtienearma/:id')
+  async updateFunTieneArma(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateFunTieneArmaDto: UpdateFunTieneArmaDto
+  ) {
+    try {
+      const funTieneArma = await firstValueFrom(
+        this.client.send('update.ofiuni.funTieneArma', { id, ...updateFunTieneArmaDto }),
+      )
+      return funTieneArma;
+
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      } else {
+        // Si no es un status manejado, lanzamos un error interno 
+        throw new RpcException('Error desconocido al actualizar la relación fun-tiene-arma.');
+      }
+    }
+  }
+
+  @Delete('funtienearma/:id')
+  async removeFunTieneArma(
+    @Param('id', ParseUUIDPipe) id: string
+  ) {
+    try {
+      const funTieneArma = await firstValueFrom(
+        this.client.send('delete.ofiuni.funTieneArma', { id }),
+      )
+      return funTieneArma;
+
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      } else if (error.status === 404) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      }
+      else {
+        // Si no es un status manejado, lanzamos un error interno 
+        throw new RpcException('Error desconocido al eliminar la relación fun-tiene-arma.');
+      }
+    }
+  }
+
+  //UNIDAD TIENE ARMA
+  @Post('unitienearma')
+  async createUnidadTieneArma(@Body() createFunTieneArmaDto: CreateFunTieneArmaDto) {
+    try {
+      const unidadTieneArma = await firstValueFrom(
+        this.client.send('crear.ofiuni.uniTieneArma', createFunTieneArmaDto),
+      )
+      return unidadTieneArma;
+
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      } else {
+        // Si no es un status manejado, lanzamos un error interno
+        throw new RpcException('Error desconocido al crear la relación unidad-tiene-arma.');
+      }
+    }
+  }
+
+  @Get('unitienearma')
+  async findAllUnidadTieneArma() {
+    try {
+      const unidadTieneArma = await firstValueFrom(
+        this.client.send('get.ofiuni.uniTieneArma', {}),
+      )
+      return unidadTieneArma;
+
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      } else {
+        // Si no es un status manejado, lanzamos un error interno
+        throw new RpcException('Error desconocido al obtener la relación unidad-tiene-arma.');
+      }
+    }
+  }
 }
