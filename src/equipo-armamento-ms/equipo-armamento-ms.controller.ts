@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Inject, InternalServerErrorException, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Inject, InternalServerErrorException, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -264,6 +264,66 @@ export class EquipoArmamentoMsController {
         throw new BadRequestException(error.message);
       } else {
         throw new InternalServerErrorException('Error desconocido al eliminar el equipo.');
+      }
+    }
+  }
+
+  //MARCAS
+  @Get("marca")
+  async findAllMarcas() {
+    try {
+      const marcas = await firstValueFrom(
+        this.client.send('get.articulo.marca', {})
+      )
+      return marcas
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+  @Delete("marca/:id")
+  async removeMarca(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const marca = await firstValueFrom(
+        this.client.send('delete.articulo.marca', { id }) //TODO manejo de error
+      )
+      return marca;
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        throw new BadRequestException(error.message);
+      } else {
+        throw new InternalServerErrorException('Error desconocido al eliminar la marca.');
+      }
+    }
+  }
+  //MODELOS
+  @Get("modelo")
+  async findAllModelos() {
+    try {
+      const modelos = await firstValueFrom(
+        this.client.send('get.articulo.modelo', {})
+      )
+      return modelos
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+
+  @Delete("modelo/:id")
+  async removeModelo(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const modelo = await firstValueFrom(
+        this.client.send('delete.articulo.modelo', { id }) //TODO manejo de error
+      )
+      return modelo;
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        throw new BadRequestException(error.message);
+      } else {
+        throw new InternalServerErrorException('Error desconocido al eliminar el modelo.');
       }
     }
   }

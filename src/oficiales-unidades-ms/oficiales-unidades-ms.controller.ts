@@ -3,8 +3,9 @@ import { RABBITMQ_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOficialeDto, CreateUnidadDto } from './dto';
 import { catchError, first, firstValueFrom } from 'rxjs';
+import { CreateFunTieneArmaDto } from './dto/create-fun-tiene-arma.dto';
 
-@Controller('oficiales-unidades-ms')
+@Controller('ofiuni')
 export class OficialesUnidadesMsController {
   constructor(
     @Inject(RABBITMQ_SERVICE) private readonly client: ClientProxy,
@@ -118,5 +119,25 @@ export class OficialesUnidadesMsController {
     }
   }
 
+  // FUNCIANARIO TIENE ARMA
+  @Post('funtienearma')
+  async createFunTieneArma(@Body() createFunTieneArmaDto: CreateFunTieneArmaDto) {
+    try {
+      const funTieneArma = await firstValueFrom(
+        this.client.send('crear.funTieneArma', createFunTieneArmaDto),
+      )
+      return funTieneArma;
+
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        // Lanzar una excepción HTTP adecuada
+        throw new BadRequestException(error.message);
+      } else {
+        // Si no es un status manejado, lanzamos un error interno 
+        throw new RpcException('Error desconocido al crear la relación fun-tiene-arma.');
+      }
+    }
+  }
 
 }
