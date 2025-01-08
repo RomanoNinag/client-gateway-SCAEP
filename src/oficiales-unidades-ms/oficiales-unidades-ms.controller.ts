@@ -46,6 +46,19 @@ export class OficialesUnidadesMsController {
     }
   }
 
+  @Get('unidad/:id')
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string
+  ) {
+    try {
+      const unidad = await firstValueFrom(
+        this.client.send('get.unidad.id', { id }),
+      )
+      return unidad;
+    } catch (error) {
+      this.handleHttpErrors(error);
+    }
+  }
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.oficialesUnidadesMsService.findOne(+id);
