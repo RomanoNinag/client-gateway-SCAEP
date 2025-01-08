@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { IsDate, IsString, IsUUID } from "class-validator";
 
 export class CreateUniTieneArmaDto {
@@ -7,12 +8,14 @@ export class CreateUniTieneArmaDto {
     @IsUUID()
     id_uni: string;
 
+    @Transform(({ value }) => new Date(value))
     @IsDate()
     fecha_entrega: Date;
 
     @IsString()
     nro_acta_entrega: string;
 
+    @Transform(({ value }) => new Date(value))
     @IsDate()
     fecha_registro: Date;
 
