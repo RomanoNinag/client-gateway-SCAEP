@@ -61,6 +61,7 @@ export class OficialesUnidadesMsController {
   //   return this.oficialesUnidadesMsService.remove(+id);
   // }
 
+  // OFICIALES
   @Post('oficial')
   async createOficial(@Body() createOficialDto: CreateOficialeDto) {
     try {
@@ -82,6 +83,19 @@ export class OficialesUnidadesMsController {
       )
       return oficiales;
 
+    } catch (error) {
+      this.handleHttpErrors(error);
+    }
+  }
+  @Get('oficial/:id')
+  async findOneOficial(
+    @Param('id', ParseUUIDPipe) id: string
+  ) {
+    try {
+      const oficial = await firstValueFrom(
+        this.client.send('get.oficial.id', { id }),
+      )
+      return oficial;
     } catch (error) {
       this.handleHttpErrors(error);
     }
