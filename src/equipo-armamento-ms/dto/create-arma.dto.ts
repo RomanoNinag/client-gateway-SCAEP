@@ -2,9 +2,9 @@ import { IsInt, IsNumber, IsOptional, IsString, MinLength } from "class-validato
 import { CreateArticuloGeneralDto } from "./create-articulo-general.dto";
 
 export class CreateArmaDto extends CreateArticuloGeneralDto {
-    @IsString()
-    @MinLength(2)
-    cod_registro: string;
+    // @IsString()
+    // @MinLength(2)
+    // cod_registro: string;
 
     @IsOptional()
     @IsString()

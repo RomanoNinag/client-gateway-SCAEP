@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsDate, IsString, IsUUID } from "class-validator";
+import { IsBoolean, IsDate, IsString, IsUUID } from "class-validator";
 
 export class CreateFunTieneArmaDto {
     @IsString()
@@ -26,4 +26,7 @@ export class CreateFunTieneArmaDto {
 
     @IsString()
     procedencia: string;
+
+    @IsBoolean()
+    recurso_propio: boolean;
 }
