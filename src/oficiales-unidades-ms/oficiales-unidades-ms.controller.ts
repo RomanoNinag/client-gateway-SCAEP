@@ -143,6 +143,30 @@ export class OficialesUnidadesMsController {
       this.handleHttpErrors(error);
     }
   }
+  @Get('funtienearma/rp')
+  async findAllFunTieneArmaRP() {
+    try {
+      const funTieneArma = await firstValueFrom(
+        this.client.send('get.ofiuni.funTieneArma.rp', {}),
+      )
+      return funTieneArma;
+
+    } catch (error) {
+      this.handleHttpErrors(error);
+    }
+  }
+  @Get('funtienearma/srp')
+  async findAllFunTieneArmaSRP() {
+    try {
+      const funTieneArma = await firstValueFrom(
+        this.client.send('get.ofiuni.funTieneArma.srp', {}),
+      )
+      return funTieneArma;
+
+    } catch (error) {
+      this.handleHttpErrors(error);
+    }
+  }
   @Get('funtienearma/:id')
   async findOneFunTieneArma(
     @Param('id', ParseUUIDPipe) id: string
