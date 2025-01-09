@@ -56,6 +56,31 @@ export class EquipoArmamentoMsController {
       throw new RpcException(error);
     }
   }
+
+  @Get("arma/disponible")
+  async findAllArmasDisponibles() {
+    try {
+      const armas = await firstValueFrom(
+        this.client.send('get.articulo.arma.disponible', {})
+      )
+      return armas
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+  @Get("arma/asignado")
+  async findAllArmasAsignados() {
+    try {
+      const armas = await firstValueFrom(
+        this.client.send('get.articulo.arma.asignado', {})
+      )
+      return armas
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
   @Get("arma/referencia")
   async findAllArmasReferencia() {
     try {
@@ -179,6 +204,30 @@ export class EquipoArmamentoMsController {
     }
   }
 
+  @Get("equipo/disponible")
+  async findAllEquiposDisponibles() {
+    try {
+      const equipos = await firstValueFrom(
+        this.client.send('get.articulo.equipo.disponible', {})
+      )
+      return equipos
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
+  @Get("equipo/asignado")
+  async findAllEquiposAsignados() {
+    try {
+      const equipos = await firstValueFrom(
+        this.client.send('get.articulo.equipo.asignado', {})
+      )
+      return equipos
+    } catch (error) {
+      console.log(error);
+      throw new RpcException(error);
+    }
+  }
   @Get("equipo/referencia")
   async findAllEquiposReferencia() {
     try {
