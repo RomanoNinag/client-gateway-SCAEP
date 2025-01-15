@@ -378,7 +378,7 @@ export class OficialesUnidadesMsController {
     }
     else {
       // Si no es un status manejado, lanzamos un error interno
-      throw new RpcException('Error desconocido al eliminar la relación unidad-tiene-equipo.');
+      throw new RpcException('Error desconocido en el servidor');
     }
   }
 }

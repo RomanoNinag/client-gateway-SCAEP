@@ -1,5 +1,5 @@
-import { Transform } from "class-transformer";
-import { IsBoolean, IsDate, IsString, IsUUID } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsBoolean, IsDate, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateFunTieneArmaDto {
     @IsString()
@@ -10,14 +10,16 @@ export class CreateFunTieneArmaDto {
     @IsUUID()
     id_fun_pol: string;
 
-    @Transform(({ value }) => new Date(value))
+    // @Transform(({ value }) => new Date(value))
     @IsDate()
+    @Type(() => Date)
     fecha_entrega: Date;
 
     @IsString()
     nro_acta_entrega: string;
 
-    @Transform(({ value }) => new Date(value))
+    // @Transform(({ value }) => new Date(value))
+    @Type(() => Date)
     @IsDate()
     fecha_registro: Date;
 
@@ -29,4 +31,7 @@ export class CreateFunTieneArmaDto {
 
     @IsBoolean()
     recurso_propio: boolean;
+    @IsString()
+    @IsOptional()
+    observaciones: string;
 }
