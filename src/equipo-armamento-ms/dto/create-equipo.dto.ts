@@ -1,8 +1,6 @@
 import { IsString } from "class-validator";
 import { CreateArticuloGeneralDto } from "./create-articulo-general.dto";
 
-export class CreateEquipoDto extends CreateArticuloGeneralDto{
+export class CreateEquipoDto extends CreateArticuloGeneralDto {
 
-    @IsString()
-    cod_registro: string;
 }

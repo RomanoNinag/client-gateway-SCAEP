@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, HttpStatus, BadRequestException, InternalServerErrorException, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, HttpStatus, BadRequestException, InternalServerErrorException, ParseUUIDPipe, ServiceUnavailableException } from '@nestjs/common';
 import { RABBITMQ_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOficialeDto, CreateUnidadDto } from './dto';
-import { catchError, first, firstValueFrom } from 'rxjs';
+import { catchError, first, firstValueFrom, throwError, timeout } from 'rxjs';
 import { CreateFunTieneArmaDto } from './dto/create-fun-tiene-arma.dto';
 import { UpdateFunTieneArmaDto } from './dto/update-fun-tiene-arma.dto';
 import { CreateUniTieneArmaDto } from './dto/create-uni-tiene-arma.dto';
@@ -37,11 +37,16 @@ export class OficialesUnidadesMsController {
 
     try {
       const unidades = await firstValueFrom(
-        this.client.send('get.unidades', {}),
-      )
+        this.client.send('get.unidades', {})
+          .pipe(
+            timeout(3000),
+            catchError((err) => throwError(() => err)),
+          )
+      );
       return unidades;
 
     } catch (error) {
+      // console.log(error);
       this.handleHttpErrors(error);
     }
   }
@@ -368,7 +373,13 @@ export class OficialesUnidadesMsController {
 
   // HANDLING ERRORS
   private handleHttpErrors(error) {
-    console.log(error);
+    // console.log('Error al llamar al microservicio', error);
+    // console.log('codigo de error--------------------', error.code);
+    if (error?.message?.includes('Timeout has occurred')) {
+      // Lanzar una excepción con un 503 (Service Unavailable) o la que consideres adecuada
+      throw new ServiceUnavailableException('El microservicio tardó demasiado en responder (timeout)');
+    }
+
     if (error.status === 400) {
       // Lanzar una excepción HTTP adecuada
       throw new BadRequestException(error.message);
