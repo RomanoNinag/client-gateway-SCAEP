@@ -1,12 +1,12 @@
 import { Transform } from "class-transformer";
-import { IsDate, IsString, IsUUID } from "class-validator";
+import { IsDate, IsNumber, IsString, IsUUID } from "class-validator";
 
 export class CreateUniTieneArmaDto {
     @IsUUID()
     id_arma: string;
 
-    @IsUUID()
-    id_uni: string;
+    @IsNumber()
+    id_uni: number;
 
     @Transform(({ value }) => new Date(value))
     @IsDate()

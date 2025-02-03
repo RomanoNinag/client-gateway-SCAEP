@@ -1,4 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, HttpStatus, BadRequestException, InternalServerErrorException, ParseUUIDPipe, ServiceUnavailableException } from '@nestjs/common';
+// import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, HttpStatus, BadRequestException, InternalServerErrorException, ParseUUIDPipe, ServiceUnavailableException, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Inject,
+  BadRequestException,
+  ServiceUnavailableException,
+  UseInterceptors,
+  UploadedFile,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { RABBITMQ_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOficialeDto, CreateUnidadDto } from './dto';
@@ -7,13 +22,19 @@ import { CreateFunTieneArmaDto } from './dto/create-fun-tiene-arma.dto';
 import { UpdateFunTieneArmaDto } from './dto/update-fun-tiene-arma.dto';
 import { CreateUniTieneArmaDto } from './dto/create-uni-tiene-arma.dto';
 import { CreateUniTieneEquipoDto } from './dto/create-uni-tiene-equipo.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import * as multer from 'multer';
+import { ImportDocsService } from './import-docs/import-docs.service';
 
 @Controller('ofiuni')
 export class OficialesUnidadesMsController {
   constructor(
     @Inject(RABBITMQ_SERVICE) private readonly client: ClientProxy,
+    private readonly importService: ImportDocsService,
   ) { }
 
+  //UNIDADES
   @Post('unidad')
   async create(@Body() createUnidad: CreateUnidadDto) {
     // return this.client.send('crear.unidad', createUnidad)
@@ -370,6 +391,31 @@ export class OficialesUnidadesMsController {
       this.handleHttpErrors(error);
     }
   }
+
+
+  //IMPORTS
+
+  @Post('import')
+  @UseInterceptors(
+    FileInterceptor('file', {
+
+      storage: multer.memoryStorage(),
+    }),
+  )
+  async importExcel(@UploadedFile() file: Express.Multer.File) {
+    const data = await this.importService.processExcel(file.buffer);
+    // console.log('data', data);
+    try {
+      const lote = await firstValueFrom(
+        this.client.send('insert.lote', data),
+      )
+      return lote;
+    } catch (error) {
+      this.handleHttpErrors(error);
+    }
+  }
+
+
 
   // HANDLING ERRORS
   private handleHttpErrors(error) {
