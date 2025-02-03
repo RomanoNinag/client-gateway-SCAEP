@@ -25,6 +25,8 @@ import { CreateUniTieneEquipoDto } from './dto/create-uni-tiene-equipo.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import * as multer from 'multer';
+import { Express } from 'express';
+
 import { ImportDocsService } from './import-docs/import-docs.service';
 
 @Controller('ofiuni')
@@ -398,7 +400,6 @@ export class OficialesUnidadesMsController {
   @Post('import')
   @UseInterceptors(
     FileInterceptor('file', {
-
       storage: multer.memoryStorage(),
     }),
   )
