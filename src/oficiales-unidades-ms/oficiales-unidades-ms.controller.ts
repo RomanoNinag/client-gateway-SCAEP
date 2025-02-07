@@ -17,7 +17,7 @@ import {
 import { RABBITMQ_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { CreateOficialeDto, CreateUnidadDto } from './dto';
-import { catchError, first, firstValueFrom, throwError, timeout } from 'rxjs';
+import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { CreateFunTieneArmaDto } from './dto/create-fun-tiene-arma.dto';
 import { UpdateFunTieneArmaDto } from './dto/update-fun-tiene-arma.dto';
 import { CreateUniTieneArmaDto } from './dto/create-uni-tiene-arma.dto';

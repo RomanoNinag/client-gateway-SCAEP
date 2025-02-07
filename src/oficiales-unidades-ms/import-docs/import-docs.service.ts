@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { spawn } from 'child_process';
+import { envs } from 'src/config/envs';
 
 @Injectable()
 export class ImportDocsService {
@@ -7,7 +8,8 @@ export class ImportDocsService {
         return new Promise((resolve, reject) => {
 
             // const pythonPath = "C:\Users\roman\AppData\Local\Microsoft\WindowsApps\python.exe";
-            const pythonPath = "C:/Users/roman/anaconda3/python.exe";
+            // const pythonPath = "C:/Users/roman/anaconda3/python.exe";
+            const pythonPath = envs.pythonPath;
 
             const pythonProcess = spawn(pythonPath, ['src/oficiales-unidades-ms/import-docs/process_excel.py']);
             // const pythonProcess = spawn('python3', ['/'])

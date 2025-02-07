@@ -13,11 +13,12 @@ def process_excel():
     df = df.where(pd.notna(df), None)
     # Transformar los datos
     data = {
-        "armas": df[['SERIE', 'TIPO', 'MARCA','MODELO','CALIBRE']].drop_duplicates().rename(columns={
+        # "armas": df[['SERIE', 'TIPO', 'MARCA','MODELO','CALIBRE']].drop_duplicates().rename(columns={
+        "armas": df[['SERIE' ,'CALIBRE']].drop_duplicates().rename(columns={
             'SERIE': 'serie',
-            'TIPO': 'tipo',
-            'MARCA': 'marca',
-            'MODELO': 'modelo',
+            # 'TIPO': 'tipo',
+            # 'MARCA': 'marca',
+            # 'MODELO': 'modelo',
             'CALIBRE': 'calibre'
         }).to_dict(orient="records"),
         
