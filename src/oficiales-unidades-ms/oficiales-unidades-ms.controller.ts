@@ -13,6 +13,9 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseUUIDPipe,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  HttpStatus,
 } from '@nestjs/common';
 import { RABBITMQ_SERVICE } from 'src/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
@@ -403,7 +406,21 @@ export class OficialesUnidadesMsController {
       storage: multer.memoryStorage(),
     }),
   )
-  async importExcel(@UploadedFile() file: Express.Multer.File) {
+  async importExcel(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1000000 }),
+
+        ],
+        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        exceptionFactory: (errors) => {
+          return new Error(`File validation failed: ${errors}`);
+        }
+      })
+    )
+    file: Express.Multer.File
+  ) {
     const data = await this.importService.processExcel(file.buffer);
     // console.log('data', data);
     try {
